@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GuiaMercado.Categorias;
+using GuiaMercado.Produtos;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -24,6 +27,8 @@ public class GuiaMercadoDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Produto> ProdutosDbSet { get; set; }
+    public DbSet<Categoria> CategoriasDbSet { get; set; }
 
     #region Entities from the modules
 
@@ -81,5 +86,30 @@ public class GuiaMercadoDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        
+        builder.Entity<Categoria>(b =>
+        {
+            b.ToTable(GuiaMercadoConsts.DbTablePrefix + "Categorias");
+            b.ConfigureByConvention(); 
+            b.Property(x => x.Descricao)
+                .IsRequired()
+                .IsUnicode(false)
+                .HasMaxLength(CategoriaConsts.MaxDescricaoLength);
+        });
+        
+        builder.Entity<Produto>(b =>
+        {
+            b.ToTable(GuiaMercadoConsts.DbTablePrefix + "Produtos");
+            b.ConfigureByConvention();
+            b.Property(x => x.Descricao)
+                .IsRequired()
+                .IsUnicode(false)
+                .HasMaxLength(ProdutoConsts.MaxDescricaoLength);
+            b.Property(x => x.UltimoPreco).HasPrecision(18, 2);
+            b.Property(x => x.CategoriaId).IsRequired();
+            b.HasOne(x => x.Categoria)
+                .WithMany()
+                .HasForeignKey(x => x.CategoriaId);
+        });
     }
 }

@@ -4,6 +4,7 @@ using GuiaMercado.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace GuiaMercado.Migrations
 {
     [DbContext(typeof(GuiaMercadoDbContext))]
-    partial class GuiaMercadoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230406221025_Create_Tables_Categoria_And_Produtos")]
+    partial class CreateTablesCategoriaAndProdutos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
